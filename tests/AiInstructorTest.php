@@ -3,6 +3,7 @@ namespace Apie\Tests\AiInstructor;
 
 use Apie\AiInstructor\AiClient;
 use Apie\AiInstructor\AiInstructor;
+use Apie\AiInstructor\OllamaClient;
 use Apie\Core\ValueObjects\NonEmptyString;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
 use Apie\SchemaGenerator\SchemaGenerator;
@@ -11,7 +12,6 @@ use Apie\TypeConverter\ReflectionTypeFactory;
 use LogicException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -49,9 +49,8 @@ class AiInstructorTest extends TestCase
         $testItem = new AiInstructor(
             new SchemaGenerator(ComponentsBuilderFactory::createComponentsBuilderFactory()),
             Serializer::create(),
-            new AiClient(
+            new OllamaClient(
                 new MockHttpClient($responseFactory),
-                'api key',
                 'http://obama:12345/api',
             )
         );
@@ -94,9 +93,8 @@ class AiInstructorTest extends TestCase
         $testItem = new AiInstructor(
             new SchemaGenerator(ComponentsBuilderFactory::createComponentsBuilderFactory()),
             Serializer::create(),
-            new AiClient(
+            new OllamaClient(
                 new MockHttpClient($responseFactory),
-                'api key',
                 'http://osama:12345/api',
             )
         );
@@ -122,9 +120,8 @@ class AiInstructorTest extends TestCase
         $testItem = new AiInstructor(
             new SchemaGenerator(ComponentsBuilderFactory::createComponentsBuilderFactory()),
             Serializer::create(),
-            new AiClient(
+            new OllamaClient(
                 new MockHttpClient($responseFactory),
-                'api key',
                 'http://ollama:12345/api',
             )
         );

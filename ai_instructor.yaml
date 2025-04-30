@@ -6,6 +6,7 @@ services:
       - '@Apie\AiInstructor\AiClient'
 
   Apie\AiInstructor\AiClient:
+    factory: ['Apie\AiInstructor\AiClient', 'create']
     arguments:
       - '@?http_client'
       - '%apie.ai.api_key%'
