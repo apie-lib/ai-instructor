@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Tests\AiInstructor;
 
-use Apie\AiInstructor\AiClient;
 use Apie\AiInstructor\AiInstructor;
 use Apie\AiInstructor\OllamaClient;
 use Apie\Core\ValueObjects\NonEmptyString;

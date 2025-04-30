@@ -9,8 +9,8 @@ services:
     factory: ['Apie\AiInstructor\AiClient', 'create']
     arguments:
       - '@?http_client'
-      - '%apie.ai.api_key%'
       - '%apie.ai.base_url%'
+      - '%apie.ai.api_key%'
 
   Apie\AiInstructor\AiPlaygroundCommand:
     arguments:

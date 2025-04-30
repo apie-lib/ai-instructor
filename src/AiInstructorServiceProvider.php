@@ -29,8 +29,8 @@ class AiInstructorServiceProvider extends ServiceProvider
             function ($app) {
                 return \Apie\AiInstructor\AiClient::create(
                     $app->bound('http_client') ? $app->make('http_client') : null,
-                    $this->parseArgument('%apie.ai.api_key%'),
-                    $this->parseArgument('%apie.ai.base_url%')
+                    $this->parseArgument('%apie.ai.base_url%'),
+                    $this->parseArgument('%apie.ai.api_key%')
                 );
                 
             }
