@@ -6,8 +6,10 @@ use Apie\Core\ValueObjects\NonEmptyString;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
 use Apie\SchemaGenerator\SchemaGenerator;
 use Apie\Serializer\Serializer;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionNamedType;
 use ReflectionUnionType;
+use SensitiveParameter;
 use Symfony\Component\HttpClient\HttpClient;
 
 final class AiInstructor
@@ -20,11 +22,17 @@ final class AiInstructor
     }
 
     public function instruct(
-        ReflectionNamedType|ReflectionUnionType $type,
-        NonEmptyString $model,
+        ReflectionNamedType|ReflectionUnionType|string $type,
+        NonEmptyString|string $model,
         string $systemMessage,
         string $prompt
     ) {
+        if (is_string($type)) {
+            $type = ReflectionTypeFactory::createReflectionType($type);
+        }
+        if (is_string($model)) {
+            $model = NonEmptyString::fromNative($model);
+        }
         $schema = $this->schemaGenerator->createSchema((string) $type);
         $response = $this->aiClient->ask(
             $systemMessage,
@@ -47,26 +55,34 @@ final class AiInstructor
         }
     }
 
-    public static function createForCustomConfig(string $apiKey, string $baseUrl): self
+    public static function createForCustomConfig(#[SensitiveParameter] string $apiKey, string $baseUrl): self
     {
         return new self(
             new SchemaGenerator(ComponentsBuilderFactory::createComponentsBuilderFactory()),
             Serializer::create(),
-            new AiClient(
+            AiClient::create(
                 HttpClient::create([
                     'max_redirects' => 7,
                 ]),
-                $apiKey,
-                $baseUrl
+                $baseUrl,
+                $apiKey
             )
         );
     }
 
-    public static function createForOllama()
+    public static function createForOllama(string $baseUrl = 'http://localhost:11434/'): self
     {
         return self::createForCustomConfig(
             'IGNORED',
-            'http://localhost:11434/',
+            $baseUrl,
+        );
+    }
+
+    public static function createForOpenAi(#[SensitiveParameter] string $apiSecret): self
+    {
+        return self::createForCustomConfig(
+            $apiSecret,
+            'https://api.openai.com/v1',
         );
     }
 }

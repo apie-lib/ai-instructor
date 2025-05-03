@@ -6,10 +6,12 @@ services:
       - '@Apie\AiInstructor\AiClient'
 
   Apie\AiInstructor\AiClient:
+    factory: ['Apie\AiInstructor\AiClient', 'create']
     arguments:
       - '@?http_client'
-      - '%apie.ai.api_key%'
       - '%apie.ai.base_url%'
+      - '%apie.ai.api_key%'
+    tags: [apie.context]
 
   Apie\AiInstructor\AiPlaygroundCommand:
     arguments:

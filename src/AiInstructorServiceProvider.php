@@ -27,13 +27,22 @@ class AiInstructorServiceProvider extends ServiceProvider
         $this->app->singleton(
             \Apie\AiInstructor\AiClient::class,
             function ($app) {
-                return new \Apie\AiInstructor\AiClient(
+                return \Apie\AiInstructor\AiClient::create(
                     $app->bound('http_client') ? $app->make('http_client') : null,
-                    'TODO',
-                    'http://localhost:11434/'
+                    $this->parseArgument('%apie.ai.base_url%'),
+                    $this->parseArgument('%apie.ai.api_key%')
                 );
+                
             }
         );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\AiInstructor\AiClient::class,
+            array(
+              0 => 'apie.context',
+            )
+        );
+        $this->app->tag([\Apie\AiInstructor\AiClient::class], 'apie.context');
         $this->app->singleton(
             \Apie\AiInstructor\AiPlaygroundCommand::class,
             function ($app) {
